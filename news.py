@@ -73,12 +73,15 @@ def category(category):
         response = requests.get(TOP_HEADLINES,
                                 params=params,
                                 headers={'Authorization': API_KEY})
-        pages = count_pages(response.json())
-        if page > pages:
-            page = pages
-            return redirect(url_for('category', category=category, page=page))
-        articles = parse_articles(response.json())
-        return render(articles, page, pages, country, category)
+        if response.status_code == 200:
+            pages = count_pages(response.json())
+            if page > pages:
+                page = pages
+                return redirect(url_for('category', category=category, page=page))
+            articles = parse_articles(response.json())
+            return render(articles, page, pages, country, category)
+        elif response.status_code == 401:
+            return render_template(CONFIG['VARIOUS']['401_TEMPLATE'])
     return redirect(url_for('category', category='general', page=page))
 
 
