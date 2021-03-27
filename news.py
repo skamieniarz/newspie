@@ -34,7 +34,8 @@ requests_cache.install_cache(cache_name='news_cache',
                              expire_after=300)
 
 APP = Flask(__name__)
-
+SESSION = requests.Session()
+SESSION.headers.update({'Authorization': API_KEY})
 
 @APP.route('/', methods=['GET', 'POST'])
 def root():
@@ -70,9 +71,7 @@ def category(category):
         country = get_cookie('country')
         if country is not None:
             params.update({'country': country})
-        response = requests.get(TOP_HEADLINES,
-                                params=params,
-                                headers={'Authorization': API_KEY})
+        response = SESSION.get(TOP_HEADLINES, params=params)
         if response.status_code == 200:
             pages = count_pages(response.json())
             if page > pages:
@@ -108,9 +107,7 @@ def search(query):
     }
     if request.method == 'POST':
         return do_post(page, category='search', current_query=query)
-    response = requests.get(EVERYTHING,
-                            params=params,
-                            headers={'Authorization': API_KEY})
+    response = SESSION.get(EVERYTHING, params=params)
     pages = count_pages(response.json())
     if page > pages:
         page = pages
