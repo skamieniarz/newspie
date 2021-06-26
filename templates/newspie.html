@@ -41,16 +41,16 @@
         </table>
     </div>
         <div class="row" style="margin-top: 2%">
-            <div id="search" class="four columns">
+            <div id="search" class="five columns">
                 <form method="POST">
                     <input name="search_query" type="text" autocorrect="off" spellcheck="false" autocapitalize="off"
                         autocomplete="false" class="u-max-full-width">
                     <button type="submit" class="u-max-full-width">Search</button>
                 </form>
             </div>
-            <div id="country" class="four columns">
+            <div id="country" class="three columns">
                 <form method="POST">
-                    <select name="country" onchange="this.form.submit()" class="u-full-width">
+                    <select name="country" onchange="this.form.submit()" class="u-max-full-width">
                         <option value="None" selected disabled hidden>Select country</option>
                         {% for code in countries %}{% if code == country %}
                         <option value="{{ code }}" selected>

@@ -9,6 +9,7 @@ import configparser
 import json
 import logging
 import os
+from typing import Union
 
 import requests
 import requests_cache
@@ -36,6 +37,7 @@ requests_cache.install_cache(cache_name='news_cache',
 APP = Flask(__name__)
 SESSION = requests.Session()
 SESSION.headers.update({'Authorization': API_KEY})
+
 
 @APP.route('/', methods=['GET', 'POST'])
 def root():
@@ -76,7 +78,8 @@ def category(category):
             pages = count_pages(response.json())
             if page > pages:
                 page = pages
-                return redirect(url_for('category', category=category, page=page))
+                return redirect(
+                    url_for('category', category=category, page=page))
             articles = parse_articles(response.json())
             return render(articles, page, pages, country, category)
         elif response.status_code == 401:
@@ -85,7 +88,7 @@ def category(category):
 
 
 @APP.route('/search/<string:query>', methods=['GET', 'POST'])
-def search(query):
+def search(query: str):
     ''' Handles category route.
 
     Parameters:
@@ -142,7 +145,7 @@ def do_post(page, category='general', current_query=None):
     return redirect(url_for('category', category=category, page=page))
 
 
-def parse_articles(response):
+def parse_articles(response: dict) -> list:
     ''' Parses articles fetched from News API.
 
     Returns:
@@ -166,16 +169,15 @@ def parse_articles(response):
     return parsed_articles
 
 
-def count_pages(response):
+def count_pages(response: dict) -> int:
     ''' Helper method that counts number of total pages basing on total
-        results from News API response and page size.
+        results from News API response and PAGE_SIZE.
 
     Returns:
         An int with a number of total pages. '''
-    pages = 0
     if response.get('status') == 'ok':
-        pages = (-(-response.get('totalResults', 0) // PAGE_SIZE))
-    return pages
+        return (-(-response.get('totalResults', 0) // PAGE_SIZE))
+    return 0
 
 
 def render(articles, page, pages, country, category):
@@ -192,15 +194,14 @@ def render(articles, page, pages, country, category):
                            pages=pages)
 
 
-def get_cookie(key):
+def get_cookie(key: str) -> Union[str, None]:
     ''' Helper method that gets cookie's value.
 
     Returns:
         A string with a value of a cookie with provided key. If a key is
         missing, None is returned.
     '''
-    cookie_value = request.cookies.get(key)
-    return cookie_value
+    return request.cookies.get(key)
 
 
 if __name__ == '__main__':
