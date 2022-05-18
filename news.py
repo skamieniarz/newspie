@@ -158,7 +158,7 @@ def parse_articles(response: dict) -> list:
             parsed_articles.append({
                 'published_at':
                     parser.isoparse(article['publishedAt']
-                                   ).strftime('%Y-%m-%d %H:%M'),
+                                   ).strftime('%d-%m %H:%M'),
                 'title':
                     article['title'],
                 'url':
