@@ -164,7 +164,7 @@ def parse_articles(response: dict) -> list:
                 'url':
                     article['url'],
                 'source':
-                    article['source']['name']
+                    article['author']
             })
     return parsed_articles
 
