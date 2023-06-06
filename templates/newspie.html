@@ -23,8 +23,7 @@
             <thead>
                 <tr>
                   <th>Date</th>
-                  <th>Title</th>
-                  <th>Source</th>
+                  <th>Title and source</th>
                 </tr>
               </thead>
             <tbody>
@@ -34,7 +33,6 @@
                 <td><a href="{{ article['url'] }}" target="_blank"
                         rel="nofollow noopener noreferrer">{{ article['title'] }}</a> 
                 </td>
-                <td>{{ article['source'] }}</td>
             </tr>
             {% endfor %}
             </tbody>

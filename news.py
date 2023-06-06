@@ -149,8 +149,7 @@ def parse_articles(response: dict) -> list:
     ''' Parses articles fetched from News API.
 
     Returns:
-        A list of dicts containing publishing date, title, URL and source of
-        articles.
+        A list of dicts containing publishing date, title and URL.
     '''
     parsed_articles = []
     if response.get('status') == 'ok':
@@ -162,9 +161,7 @@ def parse_articles(response: dict) -> list:
                 'title':
                     article['title'],
                 'url':
-                    article['url'],
-                'source':
-                    article['author']
+                    article['url']
             })
     return parsed_articles
 
