@@ -11,8 +11,4 @@ flake8 = "*"
 [packages]
 requests = "*"
 flask = "*"
-python-dateutil = "*"
 requests-cache = "*"
-
-[requires]
-python_version = "3.8.6"

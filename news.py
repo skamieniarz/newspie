@@ -13,7 +13,6 @@ from typing import Union
 
 import requests
 import requests_cache
-from dateutil import parser
 from flask import (Flask, make_response, redirect, render_template, request,
                    url_for)
 
@@ -81,7 +80,9 @@ def category(category):
                 return redirect(
                     url_for('category', category=category, page=page))
             articles = parse_articles(response.json())
-            return render(articles, page, pages, country, category)
+            theme = get_cookie('theme') if get_cookie(
+                'theme') is not None else 'light'
+            return render(articles, page, pages, country, category, theme)
         elif response.status_code == 401:
             return render_template(CONFIG['VARIOUS']['401_TEMPLATE'])
     return redirect(url_for('category', category='general', page=page))
@@ -120,13 +121,15 @@ def search(query: str):
                   page,
                   pages,
                   country=get_cookie('country'),
-                  category='search')
+                  category='search',
+                  theme=get_cookie('theme'))
 
 
-def do_post(page, category='general', current_query=None):
+def do_post(page=1, category='general', current_query=None):
     ''' Helper method that handles POST request basing on the input. '''
     new_query = request.form.get('search_query')
     country = request.form.get('country')
+    theme = request.form.get('theme')
     next_page = request.form.get('next_page')
     previous_page = request.form.get('previous_page')
     if new_query is not None and new_query != '':
@@ -135,6 +138,11 @@ def do_post(page, category='general', current_query=None):
         response = make_response(
             redirect(url_for('category', category=category, page=1)))
         response.set_cookie('country', country)
+        return response
+    if theme is not None:
+        response = make_response(
+            redirect(url_for('category', category=category, page=page)))
+        response.set_cookie('theme', theme)
         return response
     if next_page is not None:
         page = int(next_page) + 1
@@ -149,19 +157,14 @@ def parse_articles(response: dict) -> list:
     ''' Parses articles fetched from News API.
 
     Returns:
-        A list of dicts containing publishing date, title and URL.
+        A list of dicts containing publishing title and URL.
     '''
     parsed_articles = []
     if response.get('status') == 'ok':
         for article in response.get('articles'):
             parsed_articles.append({
-                'published_at':
-                    parser.isoparse(article['publishedAt']
-                                   ).strftime('%d-%m %H:%M'),
-                'title':
-                    article['title'],
-                'url':
-                    article['url']
+                'title': article['title'],
+                'url': article['url']
             })
     return parsed_articles
 
@@ -177,7 +180,8 @@ def count_pages(response: dict) -> int:
     return 0
 
 
-def render(articles, page, pages, country, category):
+def render(articles: list, page: int, pages: int, country: str, category: str,
+           theme: str):
     ''' Renders the template with appropriate variables. Up to 12 pages
         allowed. '''
     pages = pages if pages <= 12 else 12
@@ -188,7 +192,8 @@ def render(articles, page, pages, country, category):
                            countries=COUNTRIES,
                            country=country,
                            page=page,
-                           pages=pages)
+                           pages=pages,
+                           theme=theme)
 
 
 def get_cookie(key: str) -> Union[str, None]:

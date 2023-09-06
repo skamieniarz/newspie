@@ -21,14 +21,14 @@ A minimalistic news aggregator built with [Flask](https://www.palletsprojects.co
 1. Get top articles headlines and their URLs by country and/or category.
 2. Search articles up to a month old. Looks for a given query in the titles. Language/country independent results. Relevancy decides.
 3. Results received from News API are cached for 5 minutes.
-4. Country is saved as a cookie.
+4. Country saved as a cookie.
 5. Responsive UI.
+6. Dark mode/theme.
 
 ## Open-source used: ##
 
 - [Flask](https://github.com/pallets/flask)
 - [jinja](https://github.com/pallets/jinja)
-- [Skeleton](https://github.com/dhg/Skeleton)
+- [Pico.css](https://github.com/picocss/pico)
 - [requests](https://github.com/psf/requests)
 - [requests-cache](https://github.com/reclosedev/requests-cache)
-- [dateutil](https://github.com/dateutil/dateutil)
