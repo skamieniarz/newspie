@@ -3,8 +3,6 @@ A minimalistic news aggregator built with [Flask](https://www.palletsprojects.co
 
 ![Demo!](https://raw.githubusercontent.com/skamieniarz/newspie/master/static/demo.gif)
 
-### [Link to live demo](https://skamieniarz.github.io/newspie/) ###
-
 ## Prerequisites: ##
 
 1. [Python3](https://www.python.org).
